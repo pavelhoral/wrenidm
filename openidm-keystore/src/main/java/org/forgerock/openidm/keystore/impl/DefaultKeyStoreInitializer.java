@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2020-2021 Wren Security
+ * Portions Copyright 2020-2025 Wren Security
  */
 package org.forgerock.openidm.keystore.impl;
 
@@ -56,7 +56,8 @@ class DefaultKeyStoreInitializer implements KeyStoreInitializer {
     private static final Logger logger = LoggerFactory.getLogger(DefaultKeyStoreInitializer.class);
     private static final String DEFAULT_SIGNATURE_ALGORITHM = "SHA512WithRSAEncryption";
     private static final String DEFAULT_ALGORITHM = "RSA";
-    private static final int DEFAULT_KEY_SIZE = 2048;
+    private static final int DEFAULT_RSA_KEY_SIZE = 2048;
+    private static final int DEFAULT_AES_KEY_SIZE = 128;
 
     /** Map of crypto secret key aliases and the algorithm they should use */
     private static final Map<String, String> configAliases = new LinkedHashMap<>(3);
@@ -108,7 +109,7 @@ class DefaultKeyStoreInitializer implements KeyStoreInitializer {
                 // initialize self-service certificate
                 final Pair<X509Certificate, PrivateKey> pair = CertUtil.generateCertificate(SELF_SERVICE_CERT_ALIAS,
                         "OpenIDM Self Service Certificate", "None", "None", "None", "None",
-                        DEFAULT_ALGORITHM, DEFAULT_KEY_SIZE, DEFAULT_SIGNATURE_ALGORITHM, null, null);
+                        DEFAULT_ALGORITHM, DEFAULT_RSA_KEY_SIZE, DEFAULT_SIGNATURE_ALGORITHM, null, null);
                 final Certificate cert = pair.getKey();
                 final PrivateKey key = pair.getValue();
                 keyStore.setCertificateEntry(SELF_SERVICE_CERT_ALIAS, cert);
@@ -146,7 +147,7 @@ class DefaultKeyStoreInitializer implements KeyStoreInitializer {
             } else {
                 final Pair<X509Certificate, PrivateKey> pair = CertUtil.generateCertificate("localhost",
                         "OpenIDM Self-Signed Certificate", "None", "None", "None", "None",
-                        DEFAULT_ALGORITHM, DEFAULT_KEY_SIZE, DEFAULT_SIGNATURE_ALGORITHM, null, null);
+                        DEFAULT_ALGORITHM, DEFAULT_RSA_KEY_SIZE, DEFAULT_SIGNATURE_ALGORITHM, null, null);
                 final Certificate cert = pair.getKey();
                 final PrivateKey key = pair.getValue();
                 final KeyStore.PrivateKeyEntry entry = new KeyStore.PrivateKeyEntry(key, new Certificate[]{cert});
@@ -177,7 +178,11 @@ class DefaultKeyStoreInitializer implements KeyStoreInitializer {
      */
     private void generateDefaultKey(final KeyStore ks, final String alias, final String location, final char[] password,
             final String algorithm) throws IOException, GeneralSecurityException {
-        SecretKey newKey = KeyGenerator.getInstance(algorithm).generateKey();
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
+        if ("AES".equals(algorithm)) {
+            keyGenerator.init(DEFAULT_AES_KEY_SIZE);
+        }
+        SecretKey newKey = keyGenerator.generateKey();
         ks.setEntry(alias, new KeyStore.SecretKeyEntry(newKey), new KeyStore.PasswordProtection(password));
         writeKeyStore(ks, location, password);
     }

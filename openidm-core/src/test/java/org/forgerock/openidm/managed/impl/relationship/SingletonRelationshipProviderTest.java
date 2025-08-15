@@ -13,7 +13,7 @@
  *
  * Copyright 2015 ForgeRock AS.
  */
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.relationship;
 
 public class SingletonRelationshipProviderTest {
 }

@@ -15,7 +15,7 @@
  * Portions Copyright 2018-2020 Wren Security.
  */
 
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.field;
@@ -28,8 +28,8 @@ import static org.forgerock.json.resource.ResourceResponse.FIELD_REVISION;
 import static org.forgerock.json.resource.Resources.newInternalConnectionFactory;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.json.resource.Router.uriTemplate;
-import static org.forgerock.openidm.managed.ManagedObjectSet.Action.triggerSyncCheck;
-import static org.forgerock.openidm.managed.ManagedObjectSet.CRYPTO_KEY_PTR;
+import static org.forgerock.openidm.managed.impl.ManagedObjectSet.CRYPTO_KEY_PTR;
+import static org.forgerock.openidm.managed.impl.ManagedObjectSet.Action.triggerSyncCheck;
 import static org.forgerock.util.Utils.closeSilently;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

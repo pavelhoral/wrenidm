@@ -13,15 +13,15 @@
  *
  * Copyright 2015-2016 ForgeRock AS.
  */
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.relationship;
 
 import static java.text.MessageFormat.format;
-import static org.forgerock.openidm.managed.RelationshipProvider.REPO_FIELD_FIRST_ID;
-import static org.forgerock.openidm.managed.RelationshipProvider.REPO_FIELD_PROPERTIES;
-import static org.forgerock.openidm.managed.RelationshipProvider.REPO_FIELD_SECOND_ID;
+import static org.forgerock.openidm.managed.impl.relationship.RelationshipProvider.REPO_FIELD_FIRST_ID;
+import static org.forgerock.openidm.managed.impl.relationship.RelationshipProvider.REPO_FIELD_PROPERTIES;
+import static org.forgerock.openidm.managed.impl.relationship.RelationshipProvider.REPO_FIELD_SECOND_ID;
+import static org.forgerock.openidm.managed.impl.relationship.RelationshipProvider.REPO_RESOURCE_PATH;
 import static org.forgerock.openidm.util.RelationshipUtil.REFERENCE_ID;
 import static org.forgerock.openidm.util.RelationshipUtil.REFERENCE_PROPERTIES;
-import static org.forgerock.openidm.managed.RelationshipProvider.REPO_RESOURCE_PATH;
 
 import java.util.Collection;
 import java.util.LinkedList;

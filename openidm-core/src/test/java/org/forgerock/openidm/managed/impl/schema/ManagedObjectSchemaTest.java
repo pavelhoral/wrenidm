@@ -13,16 +13,20 @@
  *
  * Portions copyright 2015-2016 ForgeRock AS.
  */
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.schema;
 
-import static org.forgerock.json.JsonValue.*;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
-import javax.script.ScriptException;
 import java.util.List;
 import java.util.Set;
-
+import javax.script.ScriptException;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValueException;
 import org.forgerock.openidm.crypto.CryptoService;
@@ -70,7 +74,7 @@ public class ManagedObjectSchemaTest {
                 , scriptRegistry
                 , cryptoService);
     }
-    
+
     @Test
     public void testSchemaFields() {
         Set<JsonPointer> schemaFields = schema.getFields().keySet();
@@ -82,7 +86,7 @@ public class ManagedObjectSchemaTest {
         assertTrue(schemaFields.contains(new JsonPointer("field5")));
         assertTrue(schemaFields.contains(new JsonPointer("field6")));
     }
-    
+
     @Test
     public void testHiddenByDefaultFields() {
         Set<JsonPointer> hiddenByDefaultFields = schema.getHiddenByDefaultFields().keySet();
@@ -94,7 +98,7 @@ public class ManagedObjectSchemaTest {
         assertTrue(hiddenByDefaultFields.contains(new JsonPointer("field5")));
         assertTrue(!hiddenByDefaultFields.contains(new JsonPointer("field6")));
     }
-    
+
     @Test
     public void testRelationshipFields() {
         List<JsonPointer> relationshipFields = schema.getRelationshipFields();
@@ -106,8 +110,8 @@ public class ManagedObjectSchemaTest {
         assertTrue(relationshipFields.contains(new JsonPointer("field5")));
         assertTrue(relationshipFields.contains(new JsonPointer("field6")));
     }
-    
-    @Test 
+
+    @Test
     public void testResourceExpansionFields() {
         assertNull(schema.getResourceExpansionField(new JsonPointer("field1")));
         assertNull(schema.getResourceExpansionField(new JsonPointer("field1/*")));
@@ -126,7 +130,7 @@ public class ManagedObjectSchemaTest {
         assertEquals(schema.getResourceExpansionField(new JsonPointer("field6/field2")).getFirst(), new JsonPointer("field6"));
         assertEquals(schema.getResourceExpansionField(new JsonPointer("field6/field2")).getSecond(), new JsonPointer("field2"));
         assertEquals(schema.getResourceExpansionField(new JsonPointer("field6/field2/field3")).getFirst(), new JsonPointer("field6"));
-        assertEquals(schema.getResourceExpansionField(new JsonPointer("field6/field2/field3")).getSecond(), new JsonPointer("field2/field3"));     
+        assertEquals(schema.getResourceExpansionField(new JsonPointer("field6/field2/field3")).getSecond(), new JsonPointer("field2/field3"));
     }
 
     @Test

@@ -15,7 +15,7 @@
  * Portions Copyright 2020 Wren Security
  */
 
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.relationship;
 
 import org.forgerock.json.resource.PreconditionFailedException;
 

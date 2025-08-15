@@ -14,7 +14,7 @@
  * Copyright 2016 ForgeRock AS.
  */
 
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl;
 
 import static org.forgerock.api.enums.PatchOperation.ADD;
 import static org.forgerock.api.enums.PatchOperation.REMOVE;
@@ -54,6 +54,8 @@ import org.forgerock.api.transform.OpenApiTransformer;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.schema.validator.Constants;
+import org.forgerock.openidm.managed.ManagedObjectService;
+import org.forgerock.openidm.managed.impl.schema.SchemaField;
 import org.forgerock.util.Function;
 import org.forgerock.util.promise.NeverThrowsException;
 import org.slf4j.Logger;
@@ -62,7 +64,7 @@ import org.slf4j.LoggerFactory;
 /**
  * {@link ApiDescription} builder for {@link ManagedObjectService}.
  */
-class ManagedObjectApiDescription {
+public class ManagedObjectApiDescription {
 
     private final static Logger logger = LoggerFactory.getLogger(ManagedObjectApiDescription.class);
 

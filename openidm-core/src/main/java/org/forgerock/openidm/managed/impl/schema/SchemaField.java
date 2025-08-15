@@ -12,15 +12,16 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2015-2016 ForgeRock AS.
+ * Portions copyright 2025 Wren Security
  */
 
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.schema;
 
 import static org.forgerock.json.JsonValueFunctions.enumConstant;
-import static org.forgerock.util.crypto.CryptoConstants.*;
+import static org.forgerock.util.crypto.CryptoConstants.CRYPTO_CIPHER;
+import static org.forgerock.util.crypto.CryptoConstants.CRYPTO_KEY;
 
 import javax.script.ScriptException;
-
 import org.forgerock.json.JsonException;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
@@ -42,41 +43,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Represents a single field or property in a managed object's schema
+ * Represents a single field or property in a managed object's schema.
  */
 public class SchemaField {
 
     /**
      * Setup logging for the {@link SchemaField}.
      */
-    private final static Logger logger = LoggerFactory.getLogger(SchemaField.class);
+    private static final Logger logger = LoggerFactory.getLogger(SchemaField.class);
 
     public static final String DEFAULT_CIPHER = CryptoConstants.CIPHER_AES_CBC_PKCS5;
+
     public static final String FIELD_ENCRYPTION = "encryption";
+
     public static final JsonPointer FIELD_ALL_RELATIONSHIPS = new JsonPointer("*" + RelationshipUtil.REFERENCE_ID);
+
     public static final JsonPointer FIELD_REFERENCE = new JsonPointer(RelationshipUtil.REFERENCE_ID);
+
     public static final JsonPointer FIELD_PROPERTIES = new JsonPointer(RelationshipUtil.REFERENCE_PROPERTIES);
+
     public static final JsonPointer FIELD_ALL = new JsonPointer("*");
+
     public static final JsonPointer FIELD_EMPTY = new JsonPointer("");
 
     /**
      * Custom {@code relationship} JSON Schema type, which is essentially a sub-type of {@code object}.
      */
     public static final String TYPE_RELATIONSHIP = "relationship";
+
     private final boolean isEncrypted;
+
     private final JsonValue encryptionConfiguration;
 
     /** Schema field types */
     enum SchemaFieldType {
-        CORE, 
+        CORE,
         RELATIONSHIP
     }
 
     /** Schema field scopes */
     private enum Scope {
-        PUBLIC, PRIVATE
+        PUBLIC,
+        PRIVATE
     }
-    
+
     /** The field name */
     private String name;
 
@@ -85,13 +95,13 @@ public class SchemaField {
 
     /** A boolean indicating if the field is returned by default */
     private boolean returnByDefault = true;
-    
-    /** A boolean indicating if the field is nullable */ 
+
+    /** A boolean indicating if the field is nullable */
     private boolean nullable = false;
-    
+
     /** A boolean indicating if the field is virtual */
     private boolean virtual;
-    
+
     /** A boolean indicating if the field is an array */
     private boolean isArray = false;
 
@@ -103,20 +113,20 @@ public class SchemaField {
 
     /** Indicates if the field will be validated before saving or updating the object */
     private boolean validationRequired = false;
-    
+
     /** The CryptoService implementation */
     private CryptoService cryptoService;
 
     /** The hashing configuration */
     private JsonValue hashingValue;
 
-    /** Script to execute when a property requires validation. */
+    /** Script to execute when the property requires validation. */
     private final ScriptEntry onValidate;
 
-    /** Script to execute once an property is retrieved from the repository. */
+    /** Script to execute once the property is retrieved from the repository. */
     private final ScriptEntry onRetrieve;
 
-    /** Script to execute when an property is about to be stored in the repository. */
+    /** Script to execute when the property is about to be stored in the repository. */
     private final ScriptEntry onStore;
 
     /** The encryptor to use for encrypting JSON values */
@@ -126,27 +136,30 @@ public class SchemaField {
     private final Scope scope;
 
     /**
-     * Constructor
+     * Create new field schema for the provided configuration.
      */
-    SchemaField(final String name, final JsonValue schema, final ScriptRegistry scriptRegistry,
+    SchemaField(
+            final String name,
+            final JsonValue schema,
+            final ScriptRegistry scriptRegistry,
             final CryptoService cryptoService) throws JsonValueException, ScriptException {
         this.name = name;
         this.cryptoService = cryptoService;
         this.scope = schema.get("scope").defaultTo(Scope.PUBLIC.name()).as(enumConstant(Scope.class));
-        
+
         // Initialize the type
         initializeType(schema);
-        
+
         // Set the onRetrieve script if defined.
         this.onRetrieve = schema.isDefined("onRetrieve")
                 ? scriptRegistry.takeScript(schema.get("onRetrieve"))
                 : null;
-        
+
         // Set the onStore script if defined.
         this.onStore = schema.isDefined("onStore")
                 ? scriptRegistry.takeScript(schema.get("onStore"))
                 : null;
-        
+
         // Set the onValidate script if defined.
         this.onValidate = schema.isDefined("onValidate")
                 ? scriptRegistry.takeScript(schema.get("onValidate"))
@@ -183,10 +196,10 @@ public class SchemaField {
             hashingValue.get("algorithm").required();
         }
     }
-    
+
     /**
      * Initializes the schema field's type. Recursively calls itself on the "items" schema if the base type is an array.
-     * 
+     *
      * @param schema a JSON object describing the schema field.
      * @throws JsonValueException when error is encountered while parsing the JSON object.
      */
@@ -217,10 +230,10 @@ public class SchemaField {
             this.validationRequired = schema.get("validate").defaultTo(false).asBoolean();
         }
     }
-    
+
     /**
      * Sets the type of the schema field.
-     * 
+     *
      * @param type the type of this schema field
      */
     private void setType(String type) {
@@ -235,7 +248,7 @@ public class SchemaField {
 
     /**
      * Returns the type of this schema field.
-     * 
+     *
      * @return the type of this schema field
      */
     public SchemaFieldType getType() {
@@ -244,7 +257,7 @@ public class SchemaField {
 
     /**
      * Returns a boolean indicating if the field is a reverse relationship.
-     * 
+     *
      * @return true if the relationship is reverse, otherwise false.
      */
     public boolean isReverseRelationship() {
@@ -253,7 +266,7 @@ public class SchemaField {
 
     /**
      * Returns the name used by the reverse relationship.
-     * 
+     *
      * @return The property name used by the reverse relationship.
      */
     public String getReversePropertyName() {
@@ -262,43 +275,43 @@ public class SchemaField {
 
     /**
      * Returns a boolean indicating if the field is returned by default.
-     * 
+     *
      * @return true if the field is returned by default, false otherwise.
      */
     public boolean isReturnedByDefault() {
         return returnByDefault;
     }
-    
+
     /**
      * Returns a boolean indicating if the field is a relationship.
-     * 
+     *
      * @return true if the field is a relationship, false otherwise.
      */
     public boolean isRelationship() {
         return type == SchemaFieldType.RELATIONSHIP;
     }
-    
+
     /**
      * Returns a boolean indicating if the field is virtual.
-     * 
+     *
      * @return true if the field is virtual, false otherwise.
      */
     public boolean isVirtual() {
         return virtual;
     }
-    
+
     /**
      * Returns a boolean indicating if the field is nullable.
-     * 
+     *
      * @return true if the field is nullable, false otherwise.
      */
     public boolean isNullable() {
         return nullable;
     }
-    
+
     /**
      * Returns a boolean indicating if the field is an array.
-     * 
+     *
      * @return true if the field is an array, false otherwise.
      */
     public boolean isArray() {
@@ -307,7 +320,7 @@ public class SchemaField {
 
     /**
      * Returns a String representing the field's name.
-     * 
+     *
      * @return the field's name.
      */
     public String getName() {
@@ -322,16 +335,16 @@ public class SchemaField {
     public boolean isValidationRequired() {
         return validationRequired;
     }
-    
+
     /**
      * Returns a boolean indicating if the property is private.
-     * 
+     *
      * @return true if the property is private, false otherwise.
      */
-    boolean isPrivate() {
+    public boolean isPrivate() {
         return Scope.PRIVATE.equals(scope);
     }
-    
+
     /**
      * Executes a script that performs a transformation of a property. Populates the {@code "property"} property in the
      * script scope with the property value. Any changes to the property are reflected back into the managed object if
@@ -363,7 +376,7 @@ public class SchemaField {
             managedObject.put(name, result);
         }
     }
-    
+
     /**
      * Executes the script if it exists, to validate a property value.
      *
@@ -371,7 +384,7 @@ public class SchemaField {
      * @throws ForbiddenException if validation of the property fails.
      * @throws InternalServerErrorException if any other exception occurs during execution.
      */
-    void onValidate(Context context, JsonValue value) throws ForbiddenException, InternalServerErrorException {
+    public void onValidate(Context context, JsonValue value) throws ForbiddenException, InternalServerErrorException {
         if (onValidate != null) {
             Script scope = onValidate.getScript(context);
             scope.put("property", value.get(name).getObject());
@@ -389,16 +402,16 @@ public class SchemaField {
     }
 
     /**
-     * Performs tasks when a property has been retrieved from the repository, including: executing the 
+     * Performs tasks when a property has been retrieved from the repository, including: executing the
      * {@code onRetrieve} script.
      *
      * @param value the JSON value that was retrieved from the repository.
      * @throws InternalServerErrorException if an exception occurs processing the property.
      */
-    void onRetrieve(Context context, JsonValue value) throws InternalServerErrorException {
+    public void onRetrieve(Context context, JsonValue value) throws InternalServerErrorException {
         execScript(context, "onRetrieve", onRetrieve, value);
     }
-    
+
     /**
      * Performs tasks when a property is to be stored in the repository, including: executing the {@code onStore} script
      * and encrypting or hashing the property.
@@ -406,7 +419,7 @@ public class SchemaField {
      * @param value the JSON value to be stored in the repository.
      * @throws InternalServerErrorException if an exception occurs processing the property.
      */
-    void onStore(Context context, JsonValue value) throws InternalServerErrorException {
+    public void onStore(Context context, JsonValue value) throws InternalServerErrorException {
         execScript(context, "onStore", onStore, value);
         try {
             if (value.isDefined(name)) {
@@ -445,7 +458,8 @@ public class SchemaField {
      *
      * @return True if this field had encryption attributes configured.
      */
-    boolean isEncrypted() {
+    public boolean isEncrypted() {
         return isEncrypted;
     }
+
 }

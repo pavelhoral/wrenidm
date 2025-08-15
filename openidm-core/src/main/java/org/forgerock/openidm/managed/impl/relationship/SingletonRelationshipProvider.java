@@ -13,7 +13,7 @@
  *
  * Copyright 2015-2016 ForgeRock AS.
  */
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.relationship;
 
 import static org.forgerock.http.routing.RoutingMode.STARTS_WITH;
 import static org.forgerock.json.JsonValue.json;
@@ -43,6 +43,8 @@ import org.forgerock.json.resource.Router;
 import org.forgerock.json.resource.SingletonResourceProvider;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.audit.util.ActivityLogger;
+import org.forgerock.openidm.managed.impl.ManagedObjectSetService;
+import org.forgerock.openidm.managed.impl.schema.SchemaField;
 import org.forgerock.openidm.smartevent.EventEntry;
 import org.forgerock.openidm.smartevent.Name;
 import org.forgerock.openidm.smartevent.Publisher;

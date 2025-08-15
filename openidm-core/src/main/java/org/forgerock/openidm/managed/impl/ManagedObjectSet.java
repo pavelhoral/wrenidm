@@ -14,7 +14,7 @@
  * Copyright 2011-2016 ForgeRock AS.
  * Portions Copyright 2025 Wren Security.
  */
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl;
 
 import static org.forgerock.json.JsonValue.*;
 import static org.forgerock.json.resource.Requests.newActionRequest;
@@ -76,6 +76,10 @@ import org.forgerock.openidm.audit.util.Status;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.crypto.CryptoService;
+import org.forgerock.openidm.managed.impl.relationship.DuplicateRelationshipException;
+import org.forgerock.openidm.managed.impl.relationship.RelationshipProvider;
+import org.forgerock.openidm.managed.impl.schema.ManagedObjectSchema;
+import org.forgerock.openidm.managed.impl.schema.SchemaField;
 import org.forgerock.openidm.patch.JsonValuePatch;
 import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.router.RouteService;
@@ -106,9 +110,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides access to a set of managed objects of a given type: managed/[type]/{id}.
- *
  */
-class ManagedObjectSet implements CollectionResourceProvider, ScriptListener, ManagedObjectSetService {
+public class ManagedObjectSet implements CollectionResourceProvider, ScriptListener, ManagedObjectSetService {
     public static final JsonPointer CRYPTO_KEY_PTR = new JsonPointer(new String[]{CRYPTO, CRYPTO_VALUE, CRYPTO_KEY});
     public static final JsonPointer CRYPTO_CIPHER_PTR =
             new JsonPointer(new String[]{CRYPTO, CRYPTO_VALUE, CRYPTO_CIPHER});
@@ -1802,7 +1805,7 @@ class ManagedObjectSet implements CollectionResourceProvider, ScriptListener, Ma
     /**
      * Get the current map of {@link RelationshipProvider} for each relationship field.
      */
-    Map<JsonPointer, RelationshipProvider> getRelationshipProviders() {
+    public Map<JsonPointer, RelationshipProvider> getRelationshipProviders() {
         return relationshipProviders;
     }
 

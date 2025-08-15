@@ -14,7 +14,7 @@
  * Copyright 2015-2016 ForgeRock AS.
  * Portions Copyright 2020 Wren Security
  */
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.relationship;
 
 import static java.text.MessageFormat.format;
 import static org.forgerock.openidm.util.RelationshipUtil.REFERENCE_ID;

@@ -13,7 +13,7 @@
  *
  * Copyright 2015-2016 ForgeRock AS.
  */
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.relationship;
 
 import static org.forgerock.json.JsonValue.array;
 import static org.forgerock.json.JsonValue.field;
@@ -30,7 +30,6 @@ import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
-
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.Connection;
@@ -42,6 +41,8 @@ import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourcePath;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.openidm.audit.util.ActivityLogger;
+import org.forgerock.openidm.managed.impl.ManagedObjectSetService;
+import org.forgerock.openidm.managed.impl.schema.SchemaField;
 import org.forgerock.openidm.util.RelationshipUtil;
 import org.forgerock.services.context.Context;
 import org.forgerock.services.context.RootContext;

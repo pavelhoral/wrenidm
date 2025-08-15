@@ -16,7 +16,7 @@
  * Copyright 2015-2016 ForgeRock AS.
  * Portions Copyright 2018-2025 Wren Security.
  */
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl.relationship;
 
 import static org.forgerock.json.JsonValue.*;
 import static org.forgerock.json.resource.Requests.newUpdateRequest;
@@ -60,6 +60,10 @@ import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.audit.util.ActivityLogger;
 import org.forgerock.openidm.audit.util.Status;
+import org.forgerock.openidm.managed.impl.ManagedObjectContext;
+import org.forgerock.openidm.managed.impl.ManagedObjectSet;
+import org.forgerock.openidm.managed.impl.ManagedObjectSetService;
+import org.forgerock.openidm.managed.impl.schema.SchemaField;
 import org.forgerock.openidm.patch.JsonValuePatch;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.AsyncFunction;

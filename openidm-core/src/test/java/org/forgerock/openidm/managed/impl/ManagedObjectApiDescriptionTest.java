@@ -14,23 +14,22 @@
  * Copyright 2016 ForgeRock AS.
  */
 
-package org.forgerock.openidm.managed;
+package org.forgerock.openidm.managed.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
-import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.util.Utils.closeSilently;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.forgerock.api.models.Action;
 import org.forgerock.api.models.Parameter;
 import org.forgerock.json.JsonValue;
-import org.forgerock.api.models.Action;
 import org.forgerock.json.schema.validator.Constants;
 import org.testng.annotations.Test;
 
